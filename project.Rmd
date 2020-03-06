@@ -28,22 +28,25 @@ For this example I used the site above and downloaded data using the following s
 - Cause of Delay = CarrierDelay
 
 ```{r}
+library(tswge)
 flight = read.csv("29496285_T_ONTIME_REPORTING.csv")
 ```
 
 
 This results in data with 583,985 observations with 9 variables. Actually there are 10 variables because a variable called "X" was included but I'm not sure what this is?
 
-However, it's clear we need to narrow down some things. Maybe to a specific airline and location and possibly pick something like departure delay to predict. For instance...
+However, it's clear we need to narrow down some things. Maybe to a specific airline and location and possibly pick something like departure delay to predict. For instance, here I've filtered to a single carrier and DFW as the origin airport. 
 
 ```{r}
-# data filtered to AA departure delay at location 14986
-aa.dep.delay = subset(flight, (OP_UNIQUE_CARRIER == "AA" & ORIGIN_AIRPORT_ID == 14986), select = c("DEP_DELAY"))
+# data filtered to AA departure delay at location 11298 (DFW Airport)
+aa.dep.delay = subset(flight, (OP_UNIQUE_CARRIER == "AA" & ORIGIN_AIRPORT_ID == 11298), select = c("DEP_DELAY"))
 ```
+
+Looking at the plots below there doesn't seem to be too much structure in the realization. It pretty much looks like white noise, but then again this is just a single month. 
 
 ```{r}
 invisible(
-  plotts.sample.wge(aa.dep.delay$DEP_DELAY)
+  plotts.sample.wge(na.omit(aa.dep.delay$DEP_DELAY))
 )
 ```
 
