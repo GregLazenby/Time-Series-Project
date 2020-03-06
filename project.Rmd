@@ -1,0 +1,50 @@
+---
+title: "Time Series Project"
+author:
+  - Greg Lazenby
+  - Rebecca Holsapple
+date: April 11, 2020
+output: html_notebook
+---
+
+
+Source data:
+https://transtats.bts.gov/dl_selectfields.asp?table_id=236
+
+For this example I used the site above and downloaded data using the following selections:
+
+- Filter Geography = All
+- Filter Year = 2019
+- Filter Period = January
+
+- Time Period = FlightDate
+- Airline = Reporting_Airline
+- Origin = OriginAirportID
+- Destination = DestAirportID
+- Departure Performance = DepDelay
+- Arrival Performance = ArrDelay
+- Cancellations and Diversions = Cancelled
+- Flight Summaries = Flights
+- Cause of Delay = CarrierDelay
+
+```{r}
+flight = read.csv("29496285_T_ONTIME_REPORTING.csv")
+```
+
+
+This results in data with 583,985 observations with 9 variables. Actually there are 10 variables because a variable called "X" was included but I'm not sure what this is?
+
+However, it's clear we need to narrow down some things. Maybe to a specific airline and location and possibly pick something like departure delay to predict. For instance...
+
+```{r}
+# data filtered to AA departure delay at location 14986
+aa.dep.delay = subset(flight, (OP_UNIQUE_CARRIER == "AA" & ORIGIN_AIRPORT_ID == 14986), select = c("DEP_DELAY"))
+```
+
+```{r}
+invisible(
+  plotts.sample.wge(aa.dep.delay$DEP_DELAY)
+)
+```
+
+
